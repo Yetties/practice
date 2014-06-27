@@ -1,0 +1,7 @@
+Write a linked list structure, in which each node stores an int. 
+
+Provide the following API:
+- insert(int): insert a node with the int data into the front of the list.
+- pop: return the head node and remove it from the list.
+- clear: remove all nodes from the list.
+- contains(int): return the first node that matches the data. Return NULL if not found. 
