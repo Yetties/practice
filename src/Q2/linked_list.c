@@ -36,8 +36,8 @@ struct node* pop(void) {
   if (g_head == NULL) {
     return NULL;
   } else {
-	g_head = g_head->next;
-	return tmp;
+    g_head = g_head->next;
+    return tmp;
   }
 }
 
@@ -46,8 +46,8 @@ void clear(void) {
 
   while (tmp != NULL) {
     tmp = g_head->next;
-	free(g_head);
-	g_head = tmp;
+    free(g_head);
+    g_head = tmp;
   }
   g_head = NULL;
 }
@@ -58,8 +58,8 @@ struct node* contains(int value) {
   while (tmp != NULL) {
     if (tmp->data == value) {
       return tmp;
-	}
-	tmp = tmp->next;
+    }
+    tmp = tmp->next;
   }
   return NULL;
 }
