@@ -1,72 +1,111 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void insert(int);
-struct node* pop(void);
-void clear(void);
-struct node* contains(int);
-void print_nodes(void);
-
-struct node *g_head;
-
-struct node{
+struct node {
   int data;
   struct node *next;
 };
 
+void insert(struct node **head, int value);
+struct node* pop(struct node **head);
+void clear(struct node **head);
+struct node* contains(struct node **head, int value);
+void print_nodes(struct node **head);
+
 int main(int argc, char *argv[]) {
+  struct node *head = NULL;
+
+  printf("===== insert() =====\n");
+  insert(&head, 3);
+  insert(&head, 2);
+  insert(&head, 1);
+  print_nodes(&head);
+
+  printf("\n===== pop() =====\n");
+  struct node *ptr = pop(&head);
+  if (ptr != NULL) {
+    printf("ptr: %p, ptr->data: %d, ptr->next: %p\n", ptr, ptr->data, ptr->next);
+  } else {
+    printf("NULL");
+  }
+
+  printf("\n===== contain() =====\n");
+  struct node *con_ptr1 = contains(&head, 3);
+  printf("contains(3) => ");
+  if (con_ptr1 != NULL) {
+    printf("con_ptr1: %p, con_ptr1->data: %d, con_ptr1->next: %p\n", con_ptr1, con_ptr1->data, con_ptr1->next);
+  } else {
+    printf("not found.\n");
+  }
+  struct node *con_ptr2 = contains(&head, 30);
+  printf("contains(30) => ");
+  if (con_ptr2 != NULL) {
+    printf("con_ptr2: %p, con_ptr2->data: %d, con_ptr2->next: %p\n", con_ptr2, con_ptr2->data, con_ptr2->next);
+  } else {
+    printf("not found.\n");
+  }
+
+  printf("\n===== clear() =====\n");
+  clear(&head);
+  print_nodes(&head);
+
   return 0;
 }
 
-void insert(int value) {
+void insert(struct node **head, int value) {
   struct node *tmp = malloc(sizeof(struct node));
   tmp->data = value;
 
-  if (g_head == NULL) {
+  if (head == NULL) {
     tmp->next = NULL;
   } else {
-    tmp->next = g_head;
+    tmp->next = *head;
   }
-  g_head = tmp;
+  *head = tmp;
 }
 
-struct node* pop(void) {
-  struct node *tmp = g_head;
+struct node* pop(struct node **head) {
+  struct node *tmp = *head;
 
-  if (g_head == NULL) {
+  if (head == NULL) {
     return NULL;
   } else {
-    g_head = g_head->next;
+    *head = tmp->next;
     return tmp;
   }
 }
 
-void clear(void) {
-  struct node *tmp = g_head;
+void clear(struct node **head) {
+  struct node *tmp = *head;
 
   while (tmp != NULL) {
-    tmp = g_head->next;
-    free(g_head);
-    g_head = tmp;
+    tmp = tmp->next;
+    free(*head);
+    *head = tmp;
   }
-  g_head = NULL;
+  *head = NULL;
 }
 
-struct node* contains(int value) {
-  struct node *tmp = g_head;
+struct node* contains(struct node **head, int value) {
+  struct node *tmp = *head;
 
   while (tmp != NULL) {
-    if (tmp->data == value) {
+    if (tmp->data == value)
       return tmp;
-    }
+
     tmp = tmp->next;
   }
   return NULL;
 }
 
-void print_nodes(void) {
-  struct node *tmp = g_head;
+void print_nodes(struct node **head) {
+  struct node *tmp = *head;
 
+  if (tmp == NULL) {
+    printf("list is empty.\n");
+    return;
+  }
+  
   while (tmp != NULL) {
     printf("tmp->data = %d, tmp->next = %p\n", tmp->data, tmp->next);
     tmp = tmp->next;
