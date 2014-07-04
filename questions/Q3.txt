@@ -1,0 +1,2 @@
+1. Provide a new function that reverse the linked list.
+2. Modify insert to make the linked list sorted. Since the list is sorted, contains function can return early.
