@@ -7,107 +7,98 @@ struct Node {
 };
 
 void insert(struct Node **head, int value);
-struct Node* pop(struct Node **head);
+int pop(struct Node **head);
 void clear(struct Node **head);
-struct Node* contains(struct Node **head, int value);
-void print_nodes(struct Node **head);
+int contains(const struct Node *head, int value);
+void print_nodes(const struct Node *head);
+void print_case(const char * case_type);
 
 int main(int argc, char *argv[]) {
   struct Node *head = NULL;
 
-  printf("===== insert() =====\n");
+  print_case("insert");
   insert(&head, 3);
   insert(&head, 2);
   insert(&head, 1);
-  print_nodes(&head);
+  print_nodes(head);
 
-  printf("\n===== pop() =====\n");
-  struct Node *ptr = pop(&head);
-  if (ptr != NULL) {
-    printf("ptr: %p, ptr->data: %d, ptr->next: %p\n", ptr, ptr->data, ptr->next);
-  } else {
-    printf("NULL");
-  }
+  print_case("pop");
+  printf("pop: %d\n", pop(&head));
 
-  printf("\n===== contain() =====\n");
-  struct Node *con_ptr1 = contains(&head, 3);
-  printf("contains(3) => ");
-  if (con_ptr1 != NULL) {
-    printf("con_ptr1: %p, con_ptr1->data: %d, con_ptr1->next: %p\n", con_ptr1, con_ptr1->data, con_ptr1->next);
-  } else {
-    printf("not found.\n");
-  }
-  struct Node *con_ptr2 = contains(&head, 30);
-  printf("contains(30) => ");
-  if (con_ptr2 != NULL) {
-    printf("con_ptr2: %p, con_ptr2->data: %d, con_ptr2->next: %p\n", con_ptr2, con_ptr2->data, con_ptr2->next);
-  } else {
-    printf("not found.\n");
-  }
+  print_case("contains");
+  printf("contains(3):%d, contains(30):%d\n", contains(head, 3), contains(head, 30));
 
-  printf("\n===== clear() =====\n");
+  print_case("clear");
   clear(&head);
-  print_nodes(&head);
+  print_nodes(head);
 
   return 0;
 }
 
 void insert(struct Node **head, int value) {
-  struct Node *tmp = malloc(sizeof(struct Node));
-  tmp->data = value;
+  struct Node *new_node = malloc(sizeof(struct Node));
+  new_node->data = value;
 
-  if (*head == NULL) {
-    tmp->next = NULL;
+  if (!*head) {
+    new_node->next = NULL;
   } else {
-    tmp->next = *head;
+    new_node->next = *head;
   }
-  *head = tmp;
+  *head = new_node;
 }
 
-struct Node* pop(struct Node **head) {
-  struct Node *tmp = *head;
-
-  if (*head == NULL) {
-    return NULL;
+int pop(struct Node **head) {
+  if (!*head) {
+    return 0;
   } else {
-    *head = tmp->next;
-    return tmp;
+    struct Node *pop_node = *head;
+    int pop_data;
+
+    pop_data = pop_node->data;
+    *head = pop_node->next;
+    free(pop_node);
+
+    return pop_data;
   }
 }
 
 void clear(struct Node **head) {
-  struct Node *tmp = *head;
+  struct Node *del_node = *head;
 
-  while (tmp != NULL) {
-    tmp = tmp->next;
+  while (del_node) {
+    del_node = del_node->next;
     free(*head);
-    *head = tmp;
+    *head = del_node;
   }
   *head = NULL;
 }
 
-struct Node* contains(struct Node **head, int value) {
-  struct Node *tmp = *head;
+int contains(const struct Node *head, int value) {
+  const struct Node *node = head;
 
-  while (tmp != NULL) {
-    if (tmp->data == value)
-      return tmp;
+  while (node) {
+    if (node->data == value)
+      return node->data;
 
-    tmp = tmp->next;
+    node = node->next;
   }
-  return NULL;
+  return 0;
 }
 
-void print_nodes(struct Node **head) {
-  struct Node *tmp = *head;
+void print_nodes(const struct Node *head) {
+  const struct Node *node = head;
 
-  if (tmp == NULL) {
+  if (!node) {
     printf("list is empty.\n");
     return;
   }
   
-  while (tmp != NULL) {
-    printf("tmp->data = %d, tmp->next = %p\n", tmp->data, tmp->next);
-    tmp = tmp->next;
+  while (node) {
+    printf("node->data = %d, node->next = %p\n", node->data, node->next);
+    node = node->next;
   }
+}
+
+void print_case(const char * case_type) {
+  printf("===== %8s =====\n", case_type);
 }
