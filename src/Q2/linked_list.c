@@ -7,14 +7,16 @@ struct Node {
 };
 
 void insert(struct Node **head, int value);
-int pop(struct Node **head);
+struct Node* pop(struct Node **head);
 void clear(struct Node **head);
-int contains(const struct Node *head, int value);
+struct Node* contains(struct Node *head, int value);
 void print_nodes(const struct Node *head);
 void print_case(const char * case_type);
 
 int main(int argc, char *argv[]) {
   struct Node *head = NULL;
+  struct Node *pop_ptr = NULL;
+  struct Node *contains_ptr = NULL;
 
   print_case("insert");
   insert(&head, 3);
@@ -23,10 +25,21 @@ int main(int argc, char *argv[]) {
   print_nodes(head);
 
   print_case("pop");
-  printf("pop: %d\n", pop(&head));
+  pop_ptr = pop(&head);
+  if (pop_ptr != NULL) {
+    printf("&pop_ptr: %p, pop_ptr->data: %d, pop_ptr->next: %p\n", pop_ptr, pop_ptr->data, pop_ptr->next);
+    free(pop_ptr);
+  } else {
+    printf("NULL\n");
+  }
 
   print_case("contains");
-  printf("contains(3):%d, contains(30):%d\n", contains(head, 3), contains(head, 30));
+  contains_ptr = contains(head, 3);
+  if (contains_ptr != NULL) {
+    printf("&contains_ptr: %p, contains_ptr: %d, contains_ptr->next: %p\n", contains_ptr, contains_ptr->data, contains_ptr->next);
+  } else {
+    printf("not found.\n");
+  }
 
   print_case("clear");
   clear(&head);
@@ -47,18 +60,15 @@ void insert(struct Node **head, int value) {
   *head = new_node;
 }
 
-int pop(struct Node **head) {
+struct Node* pop(struct Node **head) {
   if (!*head) {
     return 0;
   } else {
     struct Node *pop_node = *head;
-    int pop_data;
 
-    pop_data = pop_node->data;
     *head = pop_node->next;
-    free(pop_node);
 
-    return pop_data;
+    return pop_node;
   }
 }
 
@@ -73,12 +83,12 @@ void clear(struct Node **head) {
   *head = NULL;
 }
 
-int contains(const struct Node *head, int value) {
-  const struct Node *node = head;
+struct Node* contains(struct Node *head, int value) {
+  struct Node *node = head;
 
   while (node) {
     if (node->data == value)
-      return node->data;
+      return node;
 
     node = node->next;
   }
@@ -87,6 +97,7 @@ int contains(const struct Node *head, int value) {
 
 void print_nodes(const struct Node *head) {
   const struct Node *node = head;
+  int i = 0;
 
   if (!node) {
     printf("list is empty.\n");
@@ -94,7 +105,7 @@ void print_nodes(const struct Node *head) {
   }
   
   while (node) {
-    printf("node->data = %d, node->next = %p\n", node->data, node->next);
+    printf("%d. &node = %p, node->data = %d, node->next = %p\n", ++i, node, node->data, node->next);
     node = node->next;
   }
 }
