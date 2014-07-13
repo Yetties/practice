@@ -62,7 +62,7 @@ void insert(struct Node **head, int value) {
 
 struct Node* pop(struct Node **head) {
   if (!*head) {
-    return 0;
+    return NULL;
   } else {
     struct Node *pop_node = *head;
 
@@ -92,7 +92,7 @@ struct Node* contains(struct Node *head, int value) {
 
     node = node->next;
   }
-  return 0;
+  return NULL;
 }
 
 void print_nodes(const struct Node *head) {
